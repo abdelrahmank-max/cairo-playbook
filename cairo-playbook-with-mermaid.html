@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cairo Office • Playbook (with Mermaid)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html, body { background: #f8fafc; }
+      .card { border-radius: 1rem; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+      .btn { border: 1px solid #cbd5e1; border-radius: .5rem; padding: .4rem .7rem; font-size: .875rem; color: #334155; background: white; }
+      .btn:hover { background: #f8fafc; }
+      .chip { font-size: .75rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 0 .4rem; border-radius: .75rem; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-6xl mx-auto p-6 space-y-5">
+      <div class="card p-5 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center">☁️</div>
+          <div>
+            <div class="text-xl font-semibold text-slate-900">Cairo Office</div>
+            <div class="text-sm text-slate-500">Interactive Playbook • Click a chart to render the diagram • Toggle steps/outputs</div>
+          </div>
+        </div>
+        <div class="hidden md:block text-slate-500 text-sm">No installs required • Single HTML file</div>
+      </div>
+
+      <div id="charts" class="grid md:grid-cols-2 gap-4"></div>
+
+      <div class="text-xs text-slate-500 pt-2">Tip: Edit this file and update the <span class="mono">charts</span> array to add more processes later.</div>
+    </div>
+
+    <!-- Mermaid -->
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false, securityLevel: "loose", theme: "default" });
+
+      // -----------------------------
+      // Data: your 5 charts + steps/outputs
+      // -----------------------------
+      const charts = [
+        {
+          id: "abstraction",
+          title: "Abstraction Task",
+          mermaid: String.raw`flowchart TD
+    %% Main Process (original flowchart names with stakeholders)
+    A1["Requester Initial Meeting<br/><i>Requester, Training Team</i>"]
+    A2["Setup Resources<br/><i>Training Team</i>"]
+    A3["Alignment Meeting<br/><i>Informatics Team, Training Team</i>"]
+    A4["Guidelines Conduction & Practice Period<br/><i>Training Team, QC Team</i>"]
+    A5["Kick-Off Meeting<br/><i>Training Team POC, Clinical Data Specialists (CDS)</i>"]
+    A6["Assignment & Task Determination<br/><i>PM</i>"]
+    A7["Weekly checks for UI/Ontology gaps<br/><i>Data Team, Informatics Team</i>"]
+
+    %% Flow (matches detailed process)
+    A1 --> A2
+    A2 -- "max 2 days" --> A3
+    A3 -- "2-5 days" --> A4
+    A4 --> A5
+    A5 --> A6
+    A6 <--> A7
+
+    %% Outputs (from detailed process)
+    OA1["Task Scope & Objectives"]
+    OA2["Clinical Data Model (CDM)"]
+    OA3["Wanted Values List"]
+    OA4["Functional UI"]
+    OA5["Complete Abstraction Definitions"]
+    OA6["Clinical Abstraction Guidelines"]
+    OA7["Gold Set"]
+    OA8["CDS Performance Evaluation"]
+    OA9["Daily/Weekly Abstraction Rates"]
+    OA10["Weekly QC Scores"]
+    OA11["Updated UI & Ontology"]
+
+    %% Output connections (based on detailed process)
+    A1 -.-> OA1
+    A2 -.-> OA2
+    A2 -.-> OA3
+    A2 -.-> OA4
+    A2 -.-> OA5
+    A4 -.-> OA6
+    A4 -.-> OA7
+    A6 -.-> OA8
+    A6 -.-> OA9
+    A6 -.-> OA10
+    A7 -.-> OA11
+
+    %% Styling
+    classDef decision fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#4e2600,font-weight:bold
+    classDef output fill:#b2ebf2,stroke:#006064,stroke-width:2px,color:#00363a,font-weight:bold
+    
+    class OA1 output
+    class OA2 output
+    class OA3 output
+    class OA4 output
+    class OA5 output
+    class OA6 output
+    class OA7 output
+    class OA8 output
+    class OA9 output
+    class OA10 output
+    class OA11 output`,
+          steps: [
+            { name: "Requester Initial Meeting", stakeholders: "Requester, Training Team" },
+            { name: "Setup Resources", stakeholders: "Training Team" },
+            { name: "Alignment Meeting", stakeholders: "Informatics Team, Training Team" },
+            { name: "Guidelines Conduction & Practice Period", stakeholders: "Training Team, QC Team" },
+            { name: "Kick-Off Meeting", stakeholders: "Training Team POC, Clinical Data Specialists (CDS)" },
+            { name: "Assignment & Task Determination", stakeholders: "PM" },
+            { name: "Weekly checks for UI/Ontology gaps", stakeholders: "Data Team, Informatics Team" },
+          ],
+          outputs: [
+            { name: "Task Scope & Objectives", from: "Requester Initial Meeting" },
+            { name: "Clinical Data Model (CDM)", from: "Setup Resources" },
+            { name: "Wanted Values List", from: "Setup Resources" },
+            { name: "Functional UI", from: "Setup Resources" },
+            { name: "Complete Abstraction Definitions", from: "Setup Resources" },
+            { name: "Clinical Abstraction Guidelines", from: "Guidelines Conduction & Practice Period" },
+            { name: "Gold Set", from: "Guidelines Conduction & Practice Period" },
+            { name: "CDS Performance Evaluation", from: "Assignment & Task Determination" },
+            { name: "Daily/Weekly Abstraction Rates", from: "Assignment & Task Determination" },
+            { name: "Weekly QC Scores", from: "Assignment & Task Determination" },
+            { name: "Updated UI & Ontology", from: "Weekly checks for UI/Ontology gaps" },
+          ]
+        },
+        {
+          id: "clinicalOps",
+          title: "Clinical Ops",
+          mermaid: String.raw`flowchart TD
+    %% -----------------------------
+    %% Nodes
+    %% -----------------------------
+    A1["Project Initiation<br/><i style='font-size:12px;'>Requester</i>"]
+    A2["Project Plan<br/><i style='font-size:12px;'>Program Manager</i>"]
+    B1["Training Team Communication<br/><i style='font-size:12px;'>Training Team • Program Manager • Head of Ops</i>"]
+    B2["Technical Lead Sync<br/><i style='font-size:12px;'>Training Team / Technical Lead</i>"]
+    B3["Guidelines Creation / Technical Requirements<br/><i style='font-size:12px;'>Training Team</i>"]
+
+    %% Phases as DOUBLE-BOX subroutine nodes (elegant neutral style)
+    RND[["R&D<br/><i style='font-size:12px;'>Training • QC • CDS • Informatics • Requestor</i>"]]
+    PREP[["Pre-Prod<br/><i style='font-size:12px;'>Training • QC • CDS • Informatics • PM</i>"]]
+    PROD[["Production<br/><i style='font-size:12px;'>Clinical Team • PM • QC</i>"]]
+
+    C1["Kick-off Session<br/><i style='font-size:12px;'>Program Manager • Training POC</i>"]
+    C2["Baseline Planning<br/><i style='font-size:12px;'>Program Manager</i>"]
+    D1{"Resources Allocation<br/><i style='font-size:12px;'>Head of Operations</i>"}
+    D2["FTEs<br/><i style='font-size:12px;'>Head of Operations</i>"]
+    D3["Hybrid<br/><i style='font-size:12px;'>Head of Operations</i>"]
+    D4["Contractors<br/><i style='font-size:12px;'>Head of Operations</i>"]
+    E1["Rate Calculation<br/><i style='font-size:12px;'>Program Manager</i>"]
+    E2{"Meeting Deadline?<br/><i style='font-size:12px;'>Program Manager</i>"}
+    E3["Propose ETA<br/><i style='font-size:12px;'>Program Manager</i>"]
+    E4{"Requester's Confirmation?<br/><i style='font-size:12px;'>Requester</i>"}
+
+    F1["Start Annotation<br/><i style='font-size:12px;'>Clinical Team</i>"]
+    F2["QC Scores<br/><i style='font-size:12px;'>Head of QC Team</i>"]
+    F3["Feedback<br/><i style='font-size:12px;'>Training Team</i>"]
+    F4["Generate Questions<br/><i style='font-size:12px;'>Clinical Team</i>"]
+    F5["Review Answers<br/><i style='font-size:12px;'>Training Team</i>"]
+    G1{"Review The Annotations?<br/><i style='font-size:12px;'>Quality Control Team</i>"}
+    G2["Technical Meeting<br/><i style='font-size:12px;'>Training POC • QC POC</i>"]
+    G3{"Score Misalignment?<br/><i style='font-size:12px;'>Quality Control Team</i>"}
+    G4["Review Process<br/><i style='font-size:12px;'>Quality Control Team</i>"]
+    H1["Continue Annotation<br/><i style='font-size:12px;'>Clinical Team</i>"]
+    Z1["Project Delivery<br/><i style='font-size:12px;'>Program Manager</i>"]
+
+    %% -----------------------------
+    %% Outputs
+    %% -----------------------------
+    OA1["Guidelines/Instructions Document"]
+    OA2["Worklog Sheet"]
+    OA3["SBS Scores"]
+    OA4["Feedback Sheet"]
+    OA5["Fully Done Worklog"]
+    OI1["Intake Form"]
+    OP1["Plan Doc"]
+    OR1["Rate per patient/doc/row"]
+
+    %% -----------------------------
+    %% Flow
+    %% -----------------------------
+    %% Main flow - parallel starts kept short
+    A1 --> A2
+    A1 --> B1 --> B2 --> B3
+    B3 -- "2-5 days" --> RND --> C1
+
+    %% Resource allocation (short fan-out)
+    A2 --> D1
+    D1 -- "OR" --> D2
+    D1 -- "OR" --> D3
+    D1 -- "OR" --> D4
+    D2 --> C1
+    D3 --> C1
+    D4 --> C1
+
+    %% Planning and estimation
+    C1 --> C2
+    C2 -- "2-3 days" --> E1
+    E1 --> E2
+    E2 -- "YES" --> PREP
+    E2 -- "NO"  --> E3
+    E3 --> E4
+    E4 -- "YES" --> PREP
+    E4 -- "NO"  --> A2
+    PREP --> F1
+
+    %% Execution and feedback (compact)
+    F1 --> F2
+    F2 -- "Every 7 days" --> F3
+    F3 -- "2 days" --> H1
+
+    %% Q&A loop (off QC to keep F1 tidy)
+    F2 --> F4 --> F5 --> F2
+
+    %% QC review process
+    F2 --> G3
+    G3 -- "YES" --> G2 --> G1
+    G3 -- "NO"  --> H1
+    G1 -- "YES" --> G4 --> H1
+    G1 -- "NO"  --> H1
+
+    %% Production & delivery
+    H1 --> PROD --> Z1
+
+    %% -----------------------------
+    %% Output links
+    %% -----------------------------
+    A1 -.-> OI1
+    A2 -.-> OP1
+    E1 -.-> OR1
+    F2 -.-> OA3
+    B3 -.-> OA1
+    F1 -.-> OA2
+    F3 -.-> OA4
+    Z1 -.-> OA5
+
+    %% -----------------------------
+    %% Styling
+    %% -----------------------------
+    classDef decision fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#4e2600,font-weight:bold,stroke-dasharray: 5 5;
+    classDef output fill:#b2ebf2,stroke:#006064,stroke-width:2px,color:#00363a,font-weight:bold;
+    classDef stub fill:transparent,stroke:transparent,stroke-width:0;
+
+    class D1,E2,E4,G1,G3 decision;
+    class OA1,OA2,OA3,OA4,OA5,OI1,OP1,OR1 output;
+
+    %% Legend
+    LegendStep["🟦 Process Step"]
+    LegendDecision{"🟨 Decision"}
+    LegendOutput["🟦 Output"]`,
+          steps: [
+            { name: "Project Initiation", stakeholders: "Requester" },
+            { name: "Project Plan", stakeholders: "Program Manager" },
+            { name: "Training Team Communication", stakeholders: "Training Team • Program Manager • Head of Ops" },
+            { name: "Technical Lead Sync", stakeholders: "Training Team / Technical Lead" },
+            { name: "Guidelines Creation / Technical Requirements", stakeholders: "Training Team" },
+            { name: "R&D", stakeholders: "Training • QC • CDS • Informatics • Requestor" },
+            { name: "Kick-off Session", stakeholders: "Program Manager • Training POC" },
+            { name: "Baseline Planning", stakeholders: "Program Manager" },
+            { name: "Resources Allocation (Decision)", stakeholders: "Head of Operations" },
+            { name: "Rate Calculation", stakeholders: "Program Manager" },
+            { name: "Meeting Deadline? (Decision)", stakeholders: "Program Manager" },
+            { name: "Propose ETA", stakeholders: "Program Manager" },
+            { name: "Requester's Confirmation? (Decision)", stakeholders: "Requester" },
+            { name: "Pre-Prod", stakeholders: "Training • QC • CDS • Informatics • PM" },
+            { name: "Start Annotation", stakeholders: "Clinical Team" },
+            { name: "QC Scores", stakeholders: "Head of QC Team" },
+            { name: "Feedback", stakeholders: "Training Team" },
+            { name: "Generate Questions", stakeholders: "Clinical Team" },
+            { name: "Review Answers", stakeholders: "Training Team" },
+            { name: "Review The Annotations? (Decision)", stakeholders: "Quality Control Team" },
+            { name: "Technical Meeting", stakeholders: "Training POC • QC POC" },
+            { name: "Score Misalignment? (Decision)", stakeholders: "Quality Control Team" },
+            { name: "Review Process", stakeholders: "Quality Control Team" },
+            { name: "Continue Annotation", stakeholders: "Clinical Team" },
+            { name: "Production", stakeholders: "Clinical Team • PM • QC" },
+            { name: "Project Delivery", stakeholders: "Program Manager" },
+          ],
+          outputs: [
+            { name: "Guidelines/Instructions Document", from: "Guidelines Creation / Technical Requirements" },
+            { name: "Worklog Sheet", from: "Start Annotation" },
+            { name: "SBS Scores", from: "QC Scores" },
+            { name: "Feedback Sheet", from: "Feedback" },
+            { name: "Fully Done Worklog", from: "Project Delivery" },
+            { name: "Intake Form", from: "Project Initiation" },
+            { name: "Plan Doc", from: "Project Plan" },
+            { name: "Rate per patient/doc/row", from: "Rate Calculation" },
+          ]
+        },
+        {
+          id: "programMgmt",
+          title: "Program Management",
+          mermaid: String.raw`flowchart TD
+    %% Main Process (matches image, with requested edits)
+    A1["P. initiation<br/><i style='font-size:12px;'>Program Manager • Requester</i>"]
+    A2["Planning Lead<br/><i style='font-size:12px;'>Program Manager</i>"]
+    A3{"Resources Alignment<br/><i style='font-size:12px;'>Program Manager ± Planning Lead</i>"}
+    A4["Project Kick-off & Execution<br/><i style='font-size:12px;'>Program Manager • Training Team POC</i>"]
+    A5["Baseline Identification<br/><i style='font-size:12px;'>Program Manager</i>"]
+    A6{"SCOPE VERIFICATION Q/T<br/><i style='font-size:12px;'>Program Manager</i>"}
+    A7["Alignment with QC<br/><i style='font-size:12px;'>Program Manager • QC Team POC</i>"]
+    A8{"Define Action<br/><i style='font-size:12px;'>Program Manager</i>"}
+    A9["Replanning<br/><i style='font-size:12px;'>Program Manager ± Planning Lead</i>"]
+    A10["Sync Session<br/><i style='font-size:12px;'>Program Manager • QC Team POC • Training Team POC</i>"]
+    A11["Continue Annotations<br/><i style='font-size:12px;'>CDS Team</i>"]
+    A12["Project Closure"]
+    A13["Scope Validation & Deliverables<br/><i style='font-size:12px;'>Program Manager ± Planning Lead</i>"]
+    A14["Generate Delivery Report<br/><i style='font-size:12px;'>Program Manager</i>"]
+
+    %% Flow (with requested rewires)
+    A1 --> A2
+    A2 --> A3
+    A3 -- "NO" --> A2
+    A3 -- "YES" --> A4
+    A4 --> A5
+    A5 --> A6
+    A6 -- "NO" --> A7
+    A7 --> A8
+    A8 -- "A (Yes)" --> A10
+    A8 -- "B (No)"  --> A9
+    %% Replanning loops back to Planning Lead (not to Execution)
+    A9 --> A2
+    A10 --> A11
+    A11 --> A12
+    A6 -- "YES" --> A10
+    A12 --> A13
+    %% Scores/Scope validation is a step (no YES/NO here)
+    A13 --> A14
+
+    %% Outputs (RECORDS/OUTPUTS)
+    OA1["PRO MATRIX"]
+    OA2["WORKSHEETS/RATE/Q"]
+    OA3["PROJECT OUTPUTS (ANNOTATED DATA)"]
+    OA4["R. SHEET"]
+    OA5["SCOPE VERIFICATION REPORT"]
+    OA6["Deliverables"]
+    OA7["SCOPE REPORT"]
+    OA8["DELIVERING REPORT"]
+
+    %% Output connections
+    A1 -.-> OA1
+    A4 -.-> OA2
+    A12 -.-> OA3
+    A3 -.-> OA4
+    A6 -.-> OA5
+    A13 -.-> OA6
+    A13 -.-> OA7
+    A14 -.-> OA8
+
+    %% Styling
+    classDef decision fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#4e2600,font-weight:bold
+    classDef output   fill:#b2ebf2,stroke:#006064,stroke-width:2px,color:#00363a,font-weight:bold
+
+    class A3,A6,A8 decision
+    class OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8 output`,
+          steps: [
+            { name: "P. initiation", stakeholders: "Program Manager • Requester" },
+            { name: "Planning Lead", stakeholders: "Program Manager" },
+            { name: "Resources Alignment (Decision)", stakeholders: "Program Manager ± Planning Lead" },
+            { name: "Project Kick-off & Execution", stakeholders: "Program Manager • Training Team POC" },
+            { name: "Baseline Identification", stakeholders: "Program Manager" },
+            { name: "SCOPE VERIFICATION Q/T (Decision)", stakeholders: "Program Manager" },
+            { name: "Alignment with QC", stakeholders: "Program Manager • QC Team POC" },
+            { name: "Define Action (Decision)", stakeholders: "Program Manager" },
+            { name: "Replanning", stakeholders: "Program Manager ± Planning Lead" },
+            { name: "Sync Session", stakeholders: "Program Manager • QC Team POC • Training Team POC" },
+            { name: "Continue Annotations", stakeholders: "CDS Team" },
+            { name: "Project Closure" },
+            { name: "Scope Validation & Deliverables", stakeholders: "Program Manager ± Planning Lead" },
+            { name: "Generate Delivery Report", stakeholders: "Program Manager" },
+          ],
+          outputs: [
+            { name: "PRO MATRIX", from: "P. initiation" },
+            { name: "WORKSHEETS/RATE/Q", from: "Project Kick-off & Execution" },
+            { name: "PROJECT OUTPUTS (ANNOTATED DATA)", from: "Project Closure" },
+            { name: "R. SHEET", from: "Resources Alignment (Decision)" },
+            { name: "SCOPE VERIFICATION REPORT", from: "SCOPE VERIFICATION Q/T (Decision)" },
+            { name: "Deliverables", from: "Scope Validation & Deliverables" },
+            { name: "SCOPE REPORT", from: "Scope Validation & Deliverables" },
+            { name: "DELIVERING REPORT", from: "Generate Delivery Report" },
+          ]
+        },
+        {
+          id: "qc",
+          title: "Quality Control (QC)",
+          mermaid: String.raw`flowchart TD
+    %% Main Process
+    A1["Intake Form Submission<br/><i style='font-size:12px;'>Requester</i>"]
+    A2["Quality Standard Selection<br/><i style='font-size:12px;'>Requester</i>"]
+    A3["Appoint Point Of Contact<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    D1{"Capacity Planning & Resource Allocation<br/><i style='font-size:12px;'>QC Team Lead</i>"}
+    B1["QC Team Resource Deployment<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    B2["Supplementary Resource Allocation<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    B3["Hybrid<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    C1["Assigning Process<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    C2["Start of Review Process<br/><i style='font-size:12px;'>QC Team Member</i>"]
+    E1["Quality Scores Generation<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    D2{"Re-evaluation and Review<br/><i style='font-size:12px;'>QC Team Lead</i>"}
+    F1["Feedback Process<br/><i style='font-size:12px;'>Training Team</i>"]
+    H2["Qualume Scores Generation<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    G1["Weight Quality Scores Delivery<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+    H1["Project Delivery<br/><i style='font-size:12px;'>QC Team Lead</i>"]
+
+    %% Flow
+    A1 --> A2 --> A3 --> D1
+    D1 -- "QC Team" --> B1
+    D1 -- "Supplementary" --> B2
+    D1 -- "Hybrid" --> B3
+    B1 --> C1
+    B2 --> C1
+    B3 --> C1
+    C1 --> C2
+    C2 --> E1
+    E1 --> D2
+    D2 -- "YES" --> C2
+    D2 -- "NO" --> F1
+    G1 -- "End of project" --> H1
+
+    %% EOM arrow from Quality Scores Generation to Qualume Scores Generation
+    E1 -. EOM .-> H2
+    F1 --> H2
+    H2 --> G1
+
+    %% Outputs as side nodes with dashed arrows, regular shape, and Output: label
+    A1 -.-> OA1["Intake Form Document"]
+    D1 -.-> OA2["Capacity Plan Sheet"]
+    C1 -.-> OC1["Worklog"]
+    E1 -.-> OE1["Quality Scores Report"]
+    H2 -.-> OH1["Qualume Scores Report"]
+    G1 -.-> OI1["Weighted Quality Scores Report"]
+
+    %% Styling
+    classDef decision fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#4e2600,font-weight:bold,stroke-dasharray: 5 5;
+    classDef output fill:#b2ebf2,stroke:#006064,stroke-width:2px,color:#00363a,font-weight:bold;
+    class D1,D2 decision;
+    class OA1,OA2,OC1,OE1,OH1,OI1 output;
+
+    %% Legend
+    LegendStep["🟦 Process Step"]
+    LegendDecision{"🟨 Decision"}
+    LegendOutput["🟦 Output"]`,
+          steps: [
+            { name: "Intake Form Submission", stakeholders: "Requester" },
+            { name: "Quality Standard Selection", stakeholders: "Requester" },
+            { name: "Appoint Point Of Contact", stakeholders: "QC Team Lead" },
+            { name: "Capacity Planning & Resource Allocation (Decision)", stakeholders: "QC Team Lead" },
+            { name: "QC Team Resource Deployment", stakeholders: "QC Team Lead" },
+            { name: "Supplementary Resource Allocation", stakeholders: "QC Team Lead" },
+            { name: "Hybrid", stakeholders: "QC Team Lead" },
+            { name: "Assigning Process", stakeholders: "QC Team Lead" },
+            { name: "Start of Review Process", stakeholders: "QC Team Member" },
+            { name: "Quality Scores Generation", stakeholders: "QC Team Lead" },
+            { name: "Re-evaluation and Review (Decision)", stakeholders: "QC Team Lead" },
+            { name: "Feedback Process", stakeholders: "Training Team" },
+            { name: "Qualume Scores Generation", stakeholders: "QC Team Lead" },
+            { name: "Weight Quality Scores Delivery", stakeholders: "QC Team Lead" },
+            { name: "Project Delivery", stakeholders: "QC Team Lead" },
+          ],
+          outputs: [
+            { name: "Intake Form Document", from: "Intake Form Submission" },
+            { name: "Capacity Plan Sheet", from: "Capacity Planning & Resource Allocation (Decision)" },
+            { name: "Worklog", from: "Assigning Process" },
+            { name: "Quality Scores Report", from: "Quality Scores Generation" },
+            { name: "Qualume Scores Report", from: "Qualume Scores Generation" },
+            { name: "Weighted Quality Scores Report", from: "Weight Quality Scores Delivery" },
+          ]
+        },
+        {
+          id: "training",
+          title: "Training",
+          mermaid: String.raw`flowchart TD
+    %% Main process
+    A1["Training Request Submission<br/><i style='font-size:12px;'>Head of Ops/ Program Manager</i>"] --> A2["Confirmation by Training Dept.<br/><i style='font-size:12px;'>Training Team Lead</i>"]
+    A2 -- "Modifications Needed?" --> A1
+    A2 -- "NO" --> A3["Training Agenda Development<br/><i style='font-size:12px;'>Training POC</i>"]
+    A3 --> A4["Create/Update Training Material<br/><i style='font-size:12px;'>Training POC</i>"] --> A5["Coordination with Trainers<br/><i style='font-size:12px;'>Training Team Lead</i>"] --> A6["Onboarding Process Plan<br/><i style='font-size:12px;'>Training POC</i>"]
+
+    %% Decision sequence
+    A6 --> D1{"Training for FTEs?"}
+    D1 -- "NO" --> B1["Contractors Hiring<br/><i style='font-size:12px;'>Senior Operations Manager</i>"] --> B2["Onboarding & Training<br/><i style='font-size:12px;'>Training POC</i>"] --> B3["Assessment<br/><i style='font-size:12px;'>QC POC</i>"]
+    B3 -- "Pass?" --> F1["Training Completion"]
+    B3 -- "NO" --> B4["Feedback & Re-training<br/><i style='font-size:12px;'>Training POC</i>"] --> B6["Re-assessment<br/><i style='font-size:12px;'>QC POC</i>"]
+    B6 -- "Pass?" --> F1["Training Completion"]
+    B6 -- "NO" --> B5["Termination<br/><i style='font-size:12px;'>Senior Operations Manager</i>"]
+
+    D1 -- "YES" --> D2{"Clinical Team FTEs?"}
+    D2 -- "NO" --> C1["Clinical FTEs Hiring<br/><i style='font-size:12px;'>Senior Operations Manager</i>"] --> C2["Training Conduction<br/><i style='font-size:12px;'>Training POC</i>"]
+    D2 -- "YES" --> D3{"Current Clinical FTEs?"}
+    D3 -- "NO" --> C2
+    D3 -- "YES" --> D4{"Kick-off New Project?"}
+    D4 -- "YES" --> E1["Training Conduction<br/><i style='font-size:12px;'>Training POC</i>"] --> E2["Annotation & Q/A<br/><i style='font-size:12px;'>CDS + Training POC</i>"] --> F1
+    D4 -- "NO" --> C7["Re-training Process<br/><i style='font-size:12px;'>Training POC</i>"] --> F1
+
+    %% Training process for FTEs
+    C2 --> C3["Training Process<br/>(Practice → Feedback → Evaluation)<br/><i style='font-size:12px;'>Training POC</i>"]
+    C3 --> F1
+
+    %% Outputs as side nodes with dashed arrows
+    A1 -.-> OA1["Request Doc"]
+    A3 -.-> OA2["Training Agenda Doc"]
+    A4 -.-> OA3["Training Material Doc"]
+    A6 -.-> OA4["Training Process Plan Doc"]
+    B3 -.-> OB1["SBS & F1 Scores Sheets"]
+    B6 -.-> OB1
+    E2 -.-> OE1["Worklog"]
+
+    %% Styling
+    classDef decision fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#4e2600,font-weight:bold,stroke-dasharray: 5 5;
+    classDef output fill:#b2ebf2,stroke:#006064,stroke-width:2px,color:#00363a,font-weight:bold;
+    class D1,D2,D3,D4 decision;
+    class OA1,OA2,OA3,OA4,OB1,OE1 output;
+
+    %% Legend
+    LegendStep["🟦 Process Step"]
+    LegendDecision{"🟨 Decision"}
+    LegendOutput["🟦 Output"]`,
+          steps: [
+            { name: "Training Request Submission", stakeholders: "Head of Ops / Program Manager" },
+            { name: "Confirmation by Training Dept.", stakeholders: "Training Team Lead" },
+            { name: "Training Agenda Development", stakeholders: "Training POC" },
+            { name: "Create/Update Training Material", stakeholders: "Training POC" },
+            { name: "Coordination with Trainers", stakeholders: "Training Team Lead" },
+            { name: "Onboarding Process Plan", stakeholders: "Training POC" },
+            { name: "Training for FTEs? (Decision)" },
+            { name: "Contractors Hiring", stakeholders: "Senior Operations Manager" },
+            { name: "Onboarding & Training", stakeholders: "Training POC" },
+            { name: "Assessment", stakeholders: "QC POC" },
+            { name: "Feedback & Re-training", stakeholders: "Training POC" },
+            { name: "Re-assessment", stakeholders: "QC POC" },
+            { name: "Termination", stakeholders: "Senior Operations Manager" },
+            { name: "Clinical Team FTEs? (Decision)" },
+            { name: "Clinical FTEs Hiring", stakeholders: "Senior Operations Manager" },
+            { name: "Training Conduction", stakeholders: "Training POC" },
+            { name: "Current Clinical FTEs? (Decision)" },
+            { name: "Kick-off New Project? (Decision)" },
+            { name: "Annotation & Q/A", stakeholders: "CDS + Training POC" },
+            { name: "Re-training Process", stakeholders: "Training POC" },
+            { name: "Training Process (Practice → Feedback → Evaluation)", stakeholders: "Training POC" },
+            { name: "Training Completion" },
+          ],
+          outputs: [
+            { name: "Request Doc", from: "Training Request Submission" },
+            { name: "Training Agenda Doc", from: "Training Agenda Development" },
+            { name: "Training Material Doc", from: "Create/Update Training Material" },
+            { name: "Training Process Plan Doc", from: "Onboarding Process Plan" },
+            { name: "SBS & F1 Scores Sheets", from: "Assessment" },
+            { name: "SBS & F1 Scores Sheets", from: "Re-assessment" },
+            { name: "Worklog", from: "Annotation & Q/A" },
+          ]
+        },
+      ];
+
+      // -----------------------------
+      // UI rendering: simple accordion cards
+      // -----------------------------
+      const host = document.getElementById("charts");
+
+      charts.forEach((chart, idx) => {
+        const card = document.createElement("div");
+        card.className = "card p-4";
+
+        const header = document.createElement("div");
+        header.className = "flex items-start justify-between gap-3";
+        header.innerHTML = `
+          <div>
+            <div class="text-lg font-semibold text-slate-900">${chart.title}</div>
+            <div class="text-sm text-slate-600">${chart.description || ""}</div>
+          </div>
+          <button class="btn" data-role="toggle">Show chart</button>
+        `;
+
+        const body = document.createElement("div");
+        body.className = "mt-4 hidden";
+        body.innerHTML = `
+          <div class="rounded-xl border border-slate-200 bg-white p-3" id="m-${chart.id}">Click \"Render chart\" to load the Mermaid diagram.</div>
+          <div class="mt-3 flex gap-2">
+            <button class="btn" data-role="render">Render chart</button>
+            <button class="btn" data-role="steps">Show steps</button>
+            <button class="btn" data-role="outputs">Show outputs</button>
+          </div>
+          <div class="mt-3 grid md:grid-cols-2 gap-3" id="list-${chart.id}"></div>
+        `;
+
+        card.appendChild(header);
+        card.appendChild(body);
+        host.appendChild(card);
+
+        const btnToggle = header.querySelector('[data-role="toggle"]');
+        const btnRender = body.querySelector('[data-role="render"]');
+        const btnSteps = body.querySelector('[data-role="steps"]');
+        const btnOutputs = body.querySelector('[data-role="outputs"]');
+        const mHolder = body.querySelector("#m-" + chart.id);
+        const listHolder = body.querySelector("#list-" + chart.id);
+
+        let open = false;
+        let rendered = false;
+
+        btnToggle.addEventListener("click", () => {
+          open = !open;
+          body.classList.toggle("hidden", !open);
+          btnToggle.textContent = open ? "Hide chart" : "Show chart";
+        });
+
+        btnRender.addEventListener("click", async () => {
+          if (rendered) return;
+          const { svg } = await mermaid.render("chart-" + idx, chart.mermaid);
+          mHolder.innerHTML = svg;
+          rendered = true;
+        });
+
+        btnSteps.addEventListener("click", () => {
+          listHolder.innerHTML = chart.steps.map(s => `
+            <div class="rounded-xl border border-slate-100 p-3 bg-slate-50">
+              <div class="font-medium text-slate-900">${s.name}</div>
+              ${s.stakeholders ? `<div class="text-xs text-slate-600">Stakeholders: <span class="font-medium">${s.stakeholders}</span></div>` : ""}
+            </div>
+          `).join("");
+        });
+
+        btnOutputs.addEventListener("click", () => {
+          listHolder.innerHTML = chart.outputs.map(o => `
+            <div class="rounded-xl border border-slate-100 p-3 bg-white flex items-center justify-between">
+              <div class="text-sm text-slate-800">${o.name}</div>
+              ${o.from ? `<span class="chip">from: ${o.from}</span>` : ""}
+            </div>
+          `).join("");
+        });
+      });
+    </script>
+  </body>
+</html>
